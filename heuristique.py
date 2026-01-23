@@ -78,3 +78,4 @@ def agent(observation, configuration):
 
         # 3. L'agent prend maintenant le premier élément du tri (le plus central)
     return valid_moves[0]
+
