@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools~=80.9.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "connectX"
+version = "1.0.3"
+description = ""
+requires-python = ">=3.10"
+
+dependencies = [
+    "kaggle-environments==1.1.2",
+    "gym",
+    "jsonschema",
+    "numpy",
+    "scipy",
+    "ipykernel>=7.1.0",
+]
+
+[tool.uv.extra-build-dependencies]
+connectx = ["kaggle-environments"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.uv]
+default-groups = []
