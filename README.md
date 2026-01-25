@@ -1,6 +1,32 @@
-# 🧠 ConnectX — Recherche adversariale et réseau de neurones de valeur
+# ConnectX — Recherche adversariale et réseau de neurones de valeur
 
-## 🎯 Mise en contexte
+## Genèse du projet et motivations
+
+Le choix du challenge **ConnectX** ne s’est pas fait par hasard; il résulte d’une réflexion sur la faisabilité et l’intérêt pédagogique du sujet.
+
+### Un calibrage nécessaire
+
+Initialement, nous avions envisagé plusieurs autres sujets et challenges. Cependant, ces premières propositions ont été écartées lors de la validation, car jugées trop complexes ou trop vastes pour être menées à bien dans le cadre strict de ce projet.
+
+Ce processus de sélection itératif nous a permis de :
+
+- prendre conscience des contraintes réelles de développement,
+- comprendre la nécessité d'équilibrer la **difficulté technique** et le **temps imparti**,
+- nous orienter vers un sujet aux règles simples mais à la complexité stratégique élevée.
+
+### Une opportunité d'apprentissage
+
+Au-delà de la faisabilité, ce choix a été motivé par la volonté d'explorer des domaines techniques que nous n'avions pas eu l'occasion d'approfondir durant le cursus universitaire classique.
+
+Ce projet représentait l'opportunité idéale pour mettre en pratique :
+
+- le **Deep Learning** (notamment les CNN),
+- le **Reinforcement Learning** (et ses limites),
+- les algorithmes d'heuristique.
+
+Nous souhaitions dépasser la théorie vue en cours pour nous confronter aux problèmes réels d'implémentation et d'optimisation de ces technologies.
+
+## Mise en contexte
 
 Ce projet propose un agent pour le jeu **ConnectX** (variante du Puissance 4) en combinant :
 
@@ -18,19 +44,19 @@ L’apprentissage est réalisé via du *self-play*.
 Pendant la partie, l’agent n’apprend plus : il utilise le réseau uniquement comme **fonction d’évaluation** intégrée à une recherche dans l’arbre des coups.
 
 
-## 🚀 Objectifs du projet
+## Objectifs du projet
 
 L’objectif principal de ce projet est de concevoir un **agent compétitif pour ConnectX** en tirant parti des propriétés du jeu :  
 déterministe, à information parfaite et à espace d’état relativement restreint.
 
 Plus précisément, nos objectifs sont :
 
-- 🎯 **Construire un agent capable de battre systématiquement un joueur aléatoire**
-- 🧠 **Atteindre un score élevé face à un agent Negamax de référence**
-- 🔍 **Combiner apprentissage et recherche**, plutôt que d’utiliser du reinforcement learning pur
+- **Construire un agent capable de battre systématiquement un joueur aléatoire**
+- **Atteindre un score élevé face à un agent Negamax de référence**
+- **Combiner apprentissage et recherche**, plutôt que d’utiliser du reinforcement learning pur
 
 
-## 🎮 Règles du jeu (ConnectX)
+## Règles du jeu (ConnectX)
 
 ConnectX est un jeu de type *Puissance 4* opposant deux joueurs sur un plateau rectangulaire.
 
@@ -55,8 +81,8 @@ avant l’adversaire.
 
 Une partie se termine dans l’un des cas suivants :
 
-- ✅ un joueur aligne 4 pions → **victoire**
-- 🤝 le plateau est rempli sans alignement → **match nul**
+- un joueur aligne 4 pions → **victoire**
+- le plateau est rempli sans alignement → **match nul**
 
 ### Informations supplémentaires
 
@@ -72,7 +98,7 @@ Ces propriétés rendent le jeu particulièrement adapté à :
 - les algorithmes d’élagage (Alpha-Beta)
 - l’apprentissage par self-play
 
-## 🧪 Approches testées
+## Approches testées
 
 Avant d’aboutir à la solution finale, plusieurs approches ont été explorées et comparées.
 
@@ -93,7 +119,7 @@ Ces approches se sont révélées peu adaptées au jeu ConnectX :
 - performances faibles contre un adversaire déterministe (Negamax)
 - absence d’exploitation explicite de la structure du jeu (alignements, symétries, coups forcés)
 
-👉 Ces méthodes sont généralement plus efficaces dans des environnements **stochastiques** ou à **information imparfaite**, alors que ConnectX est un jeu **déterministe à information parfaite**.
+ Ces méthodes sont généralement plus efficaces dans des environnements **stochastiques** ou à **information imparfaite**, alors que ConnectX est un jeu **déterministe à information parfaite**.
 
 
 ### Recherche adversariale classique seule
@@ -114,11 +140,11 @@ Nous avons également testé une approche basée uniquement sur :
 
 Aucune de ces approches prises isolément n’a permis d’obtenir des performances satisfaisantes.
 
-## 🧠 Stratégie finale retenue
+## Stratégie finale retenue
 
 Face aux limites du reinforcement learning pur, nous avons retenu une approche **hybride**, combinant des méthodes classiques de recherche et de l’apprentissage supervisé.
 
-### 🎯 Idée clé
+### Idée clé
 
 **Combiner la recherche exacte (Negamax + Alpha-Beta) avec un réseau de neurones de valeur**, afin de bénéficier à la fois :
 
@@ -126,9 +152,9 @@ Face aux limites du reinforcement learning pur, nous avons retenu une approche *
 - et de la capacité d’approximation d’un CNN.
 
 
-### 🧩 Composants de la solution
+### Composants de la solution
 
-#### 1️⃣ Réseau de neurones de valeur (CNN)
+#### 1️. Réseau de neurones de valeur (CNN)
 
 - Le CNN ne prédit **pas un coup**, mais la **qualité d’une position**.
 - Il estime une valeur dans l’intervalle **[-1, 1]** :
@@ -137,9 +163,9 @@ Face aux limites du reinforcement learning pur, nous avons retenu une approche *
   - −1 : position perdante
 - Il est entraîné à partir de parties jouées en **self-play**.
 
-➡️ Le réseau agit comme **fonction d’évaluation** pour la recherche.
+→ Le réseau agit comme **fonction d’évaluation** pour la recherche.
 
-#### 2️⃣ Recherche Negamax + Alpha-Beta
+#### 2️. Recherche Negamax + Alpha-Beta
 
 - Exploration de l’arbre des coups possibles.
 - Alternance automatique joueur / adversaire (Negamax).
@@ -148,10 +174,10 @@ Face aux limites du reinforcement learning pur, nous avons retenu une approche *
   - position terminale → score exact
   - profondeur limite atteinte → évaluation par le CNN
 
-➡️ La décision finale est toujours prise par la recherche, pas par le réseau seul.
+→ La décision finale est toujours prise par la recherche, pas par le réseau seul.
 
 
-#### 3️⃣ Heuristiques déterministes
+#### 3️. Heuristiques déterministes
 
 Pour améliorer l’efficacité et la stabilité :
 
@@ -159,37 +185,37 @@ Pour améliorer l’efficacité et la stabilité :
 - blocage d’une victoire adverse immédiate
 - ordre de coups centré (meilleur élagage Alpha-Beta)
 
-### ✅ Pourquoi cette approche fonctionne
+### Pourquoi cette approche fonctionne
 
 - **Negamax** assure un raisonnement exact sur les coups proches.
 - **CNN** fournit une estimation rapide des positions profondes.
 - **Alpha-Beta** réduit massivement le temps de calcul.
 
-👉 Cette combinaison s’est révélée nettement la plus efficace.
+Cette combinaison s’est révélée nettement la plus efficace.
 
 
-## 🔁 Pipeline complet de la solution
+## Pipeline complet de la solution
 
 L’idée centrale est la suivante :
 
-> **Plateau → Évaluation → Recherche → Décision**
+ **Plateau → Évaluation → Recherche → Décision**
 
 
-### 1️⃣ Évaluation d’une position
+### 1️. Évaluation d’une position
 
 Toute position de jeu est évaluée selon une règle hiérarchique :
 
 1. **Position terminale**
-   - victoire → `+1`
-   - défaite → `-1`
-   - match nul → `0`
+   - victoire → +1
+   - défaite → -1
+   - match nul → 0
 
 2. **Position non terminale**
    - estimation fournie par le **CNN de valeur**
 
-➡️ Le réseau n’est donc utilisé **uniquement** lorsque l’évaluation exacte n’est pas possible.
+→ Le réseau n’est donc utilisé **uniquement** lorsque l’évaluation exacte n’est pas possible.
 
-### 2️⃣ Recherche adversariale (Negamax + Alpha-Beta)
+### 2️. Recherche adversariale (Negamax + Alpha-Beta)
 
 À partir de la fonction d’évaluation, l’agent effectue une recherche dans l’arbre des coups :
 
@@ -211,7 +237,7 @@ Deux situations durant la recherche :
 - **position terminale rencontrée** → score exact immédiat
 
 
-### 3️⃣ Sélection du meilleur coup
+### 3️. Sélection du meilleur coup
 
 Pour chaque coup possible :
 
@@ -227,7 +253,7 @@ Des heuristiques simples sont appliquées en priorité :
 - bloquer une victoire adverse immédiate
 
 
-### 4️⃣ Génération des données par self-play
+### 4️. Génération des données par self-play
 
 L’apprentissage du CNN est réalisé **en dehors des parties réelles**, via du self-play :
 
@@ -236,9 +262,9 @@ L’apprentissage du CNN est réalisé **en dehors des parties réelles**, via d
 - chaque coup génère un exemple :
   - état du plateau
   - joueur courant
-  - résultat final de la partie (`+1 / 0 / -1`)
+  - résultat final de la partie (+1 / 0 / -1)
 
-### 5️⃣ Apprentissage par cycles
+### 5️. Apprentissage par cycles
 
 L’entraînement est organisé en **cycles successifs** :
 
@@ -251,7 +277,7 @@ L’entraînement est organisé en **cycles successifs** :
 5. sauvegarde uniquement du meilleur modèle
 
 
-### 6️⃣ Utilisation finale en compétition
+### 6️. Utilisation finale en compétition
 
 Lors d’une partie Kaggle :
 
@@ -263,14 +289,14 @@ Lors d’une partie Kaggle :
   - retourner le coup optimal
 
 
-## 🧩 Architecture du réseau de neurones de valeur (CNN)
+## Architecture du réseau de neurones de valeur (CNN)
 
 Le réseau de neurones utilisé dans ce projet est un **CNN de valeur** :  
 
 Son rôle est d’approximer la fonction : *valeur(position, joueur)* → **[-1, 1]**
 
 
-### 🎯 Entrée du réseau
+### Entrée du réseau
 
 Le plateau est encodé sous forme de **3 canaux** :
 
@@ -288,7 +314,7 @@ Ce format permet :
 - de capter naturellement les motifs spatiaux (alignements, menaces)
 
 
-### 🧠 Architecture interne
+### Architecture interne
 
 Le réseau est volontairement **simple et léger**, afin d’éviter l’overfitting.
 
@@ -313,7 +339,7 @@ Activation finale :
 - **tanh**, pour borner la sortie dans **[-1, 1]**
 
 
-### 📤 Sortie et interprétation
+### Sortie et interprétation
 
 La sortie du réseau est un **scalaire réel** :
 
@@ -325,11 +351,11 @@ Cette valeur est utilisée **exclusivement comme fonction d’évaluation**
 lors de la recherche Negamax.
 
 
-## 🔄 Entraînement du réseau de valeur
+## Entraînement du réseau de valeur
 
 L’entraînement du CNN repose sur un **apprentissage supervisé** à partir de données générées par **self-play**.  
 
-### 🎮 Génération des données par self-play
+### Génération des données par self-play
 
 L’agent joue contre lui-même en utilisant :
 
@@ -340,7 +366,7 @@ L’agent joue contre lui-même en utilisant :
 Chaque partie est jouée **jusqu’à une victoire ou un match nul**.
 
 
-### 🧾 Construction du dataset
+### Construction du dataset
 
 Pour chaque partie jouée :
 
@@ -353,10 +379,10 @@ Pour chaque partie jouée :
     - 0 en cas de match nul
     - −1 si le joueur perd
 
-➡️ Une seule partie génère **des dizaines de positions annotées**.
+→ Une seule partie génère **des dizaines de positions annotées**.
 
 
-### 🔁 Augmentation de données par symétrie
+### Augmentation de données par symétrie
 
 Pour chaque position collectée :
 
@@ -369,7 +395,7 @@ Avantages :
 - améliore la généralisation
 - coût de calcul nul
 
-### 🧠 Apprentissage supervisé
+### Apprentissage supervisé
 
 Le CNN est entraîné à prédire la **valeur finale de la position**.
 
@@ -378,7 +404,7 @@ Le CNN est entraîné à prédire la **valeur finale de la position**.
 - learning rate réduit pour la stabilité
 - entraînement sur **peu d’epochs** pour éviter l’overfitting
 
-### 🔄 Apprentissage par cycles
+### Apprentissage par cycles
 
 L’entraînement est organisé en **cycles successifs** :
 
@@ -388,7 +414,7 @@ L’entraînement est organisé en **cycles successifs** :
 4. évaluation du modèle
 
 
-### 🎯 Évaluation continue
+### Évaluation continue
 
 Après chaque cycle, le modèle est évalué contre :
 
@@ -398,7 +424,7 @@ Après chaque cycle, le modèle est évalué contre :
 Seul le modèle obtenant les **meilleures performances** est sauvegardé.
 
 
-### ⚙️ Hyperparamètres clés
+### Hyperparamètres clés
 
 - nombre de cycles : progressif
 - parties par cycle : limité pour éviter des données trop corrélées
@@ -406,7 +432,7 @@ Seul le modèle obtenant les **meilleures performances** est sauvegardé.
 - ε-greedy décroissant au fil des cycles
 
 
-## 📊 Résultats et performances
+## Résultats et performances
 
 Les performances de l’agent ont été évaluées de manière systématique après chaque cycle d’entraînement, en modifiant les hyperparamètres.
 
@@ -416,7 +442,7 @@ L’évaluation est réalisée via des matchs contre :
 - un agent **Negamax** (référence forte et déterministe)
 
 
-### 🧪 Configuration expérimentale
+### Configuration expérimentale
 
 Exemple de configuration ayant donné les meilleurs résultats :
 
@@ -426,16 +452,16 @@ Exemple de configuration ayant donné les meilleurs résultats :
 - **Learning rate** = 0.0005  
 - **ε-greedy initial** = 0.15 (décroissant)
 
----
 
-### 🏆 Résultats obtenus
+
+### Résultats obtenus
 
 #### Performance contre Random
 
 - Score moyen ≈ **1.0**
 - Victoire quasi systématique
 
-➡️ L’agent a appris des stratégies solides et ne commet plus d’erreurs grossières.
+→ L’agent a appris des stratégies solides et ne commet plus d’erreurs grossières.
 
 
 #### Performance contre Negamax
@@ -452,18 +478,18 @@ Cycle 4 : Score vs Negamax ≈ 0.63
 Cycle 5 : Score vs Negamax ≈ 0.90
 
 
-➡️ Le modèle final dépasse nettement la version Negamax de référence.
+→ Le modèle final dépasse nettement la version Negamax de référence.
 
 
-### 📉 Évolution de la perte (loss)
+### Évolution de la perte (loss)
 
 - Diminution régulière de la loss au fil des cycles
 - Stabilisation rapide avec peu d’epochs
 - Absence de divergence ou d’explosion du gradient
 
-➡️ Cela confirme que le CNN apprend une **fonction de valeur cohérente**.
+→ Cela confirme que le CNN apprend une **fonction de valeur cohérente**.
 
-### 🔍 Observations clés
+### Observations clés
 
 - Plus de données ≠ meilleur modèle
 - Trop d’epochs dégrade parfois les performances contre Negamax
@@ -471,12 +497,12 @@ Cycle 5 : Score vs Negamax ≈ 0.90
 - Le bruit contrôlé (ε-greedy) améliore la diversité des positions
 
 
-## ⚠️ Difficultés rencontrées
+## Difficultés rencontrées
 
 Le développement de cet agent a soulevé plusieurs difficultés, aussi bien techniques que méthodologiques.  
 
 
-### 🎛️ Choix des hyperparamètres
+### Choix des hyperparamètres
 
 L’un des principaux défis a été le réglage des hyperparamètres :
 
@@ -487,9 +513,9 @@ L’un des principaux défis a été le réglage des hyperparamètres :
 - **Trop de parties par cycle**  
   → données fortement corrélées, peu informatives
 
-➡️ Ces phénomènes ont montré que **minimiser la loss ne garantit pas de meilleures performances en jeu**.
+→ Ces phénomènes ont montré que **minimiser la loss ne garantit pas de meilleures performances en jeu**.
 
-### 🔁 Corrélation des données en self-play
+### Corrélation des données en self-play
 
 L’apprentissage par self-play présente un risque majeur :
 
@@ -497,14 +523,14 @@ L’apprentissage par self-play présente un risque majeur :
 - il peut renforcer ses propres biais
 - certaines stratégies deviennent sur-représentées
 
-➡️ Pour limiter ce problème :
+→ Pour limiter ce problème :
 
 - entraînement **par cycles**
 - ajout de **bruit contrôlé (ε-greedy)** en début de partie
 - évaluation régulière contre des adversaires externes (Random, Negamax)
 
 
-### ⏱️ Contraintes de temps de calcul
+### Contraintes de temps de calcul
 
 La recherche Negamax combinée au CNN est coûteuse :
 
@@ -512,10 +538,10 @@ La recherche Negamax combinée au CNN est coûteuse :
 - nécessité d’optimiser l’ordre des coups
 - compromis constant entre profondeur et temps d’inférence
 
-➡️ Cela a conduit à l’utilisation de heuristiques simples pour réduire l’arbre
+→ Cela a conduit à l’utilisation de heuristiques simples pour réduire l’arbre
 
 
-### 🐞 Débogage et intégration
+### Débogage et intégration
 
 Le projet a nécessité un débogage long et rigoureux :
 
@@ -524,20 +550,20 @@ Le projet a nécessité un débogage long et rigoureux :
 - différences de comportement CPU / GPU
 - gestion correcte des tenseurs et des dimensions
 
-➡️ Chaque erreur avait un impact direct sur les performances finales.
+→ Chaque erreur avait un impact direct sur les performances finales.
 
-### 📌 Enseignement clé
+### Enseignement clé
 
 Le principal enseignement est que :
 
 **La qualité du pipeline global est plus importante que la complexité du modèle.**
 
 
-## 🎓 Compétences acquises
+## Compétences acquises
 
 Ce projet a permis de développer et de consolider de nombreuses compétences, à la fois **techniques**, **algorithmiques** et **méthodologiques**, autour de l’intelligence artificielle appliquée aux jeux.
 
-### 🧠 Compétences en intelligence artificielle
+### Compétences en intelligence artificielle
 
 - Compréhension approfondie des **jeux déterministes à information parfaite**
 - Mise en œuvre de **recherche adversariale** :
@@ -549,7 +575,7 @@ Ce projet a permis de développer et de consolider de nombreuses compétences, �
   - value network
 
 
-### 🤖 Apprentissage automatique & Deep Learning
+### Apprentissage automatique & Deep Learning
 
 - Conception d’un **CNN adapté à un problème spécifique**
 - Encodage efficace d’un plateau de jeu en tenseur multi-canaux
@@ -561,7 +587,7 @@ Ce projet a permis de développer et de consolider de nombreuses compétences, �
   - inférence
 
 
-### 🔁 Self-play et pipelines d’apprentissage
+### Self-play et pipelines d’apprentissage
 
 - Mise en place d’un **apprentissage par self-play**
 - Génération et gestion de datasets dynamiques
@@ -573,7 +599,7 @@ Ce projet a permis de développer et de consolider de nombreuses compétences, �
 - Sauvegarde conditionnelle du meilleur modèle
 
 
-### ⚙️ Optimisation et performance
+### Optimisation et performance
 
 - Optimisation de la recherche par :
   - ordre des coups
@@ -585,7 +611,7 @@ Ce projet a permis de développer et de consolider de nombreuses compétences, �
 - Compréhension des contraintes liées à l’inférence temps réel
 
 
-### 🧪 Méthodologie et rigueur scientifique
+### Méthodologie et rigueur scientifique
 
 - Comparaison systématique des approches
 - Analyse des résultats sur plusieurs runs
@@ -593,7 +619,7 @@ Ce projet a permis de développer et de consolider de nombreuses compétences, �
 - Prise de décision basée sur l’observation expérimentale
 
 
-### 📌 Conclusion personnelle
+### Conclusion personnelle
 
 Ce projet a montré que des solutions **hybrides**, combinant recherche algorithmique et apprentissage, peuvent être :
 
@@ -604,7 +630,13 @@ Ce projet a montré que des solutions **hybrides**, combinant recherche algorith
 qu’une approche de deep reinforcement learning seule sur des jeux déterministes.
 
 
+## Référence
 
+- **Compétition Kaggle :** [Connect X - Overview](https://www.kaggle.com/competitions/connectx/overview)
+- **Leaderboard :** [Connect X - Leaderboard](https://www.kaggle.com/competitions/connectx/leaderboard)
+
+**Performance du projet :**
+Le *groupe 10* s'est classé *38ème sur 218* participants en date du 25/01/2026.
 
 
 
